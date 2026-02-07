@@ -1,0 +1,120 @@
+{
+  "$schema": "../../docs/sub-app-manifest.schema.json",
+  "name": "storage-cos",
+  "displayName": "云存储（COS）",
+  "version": "0.1.0",
+  "description": "腾讯云对象存储服务，支持文件上传、下载、备份等功能",
+  "required": false,
+  
+  "capabilities": [
+    "storage.cos:config",
+    "storage.cos:upload",
+    "storage.cos:download",
+    "storage.cos:list",
+    "storage.cos:delete",
+    "storage.cos:backup",
+    "storage.cos:restore"
+  ],
+  
+  "cli": {
+    "enabled": true,
+    "bin": "./bin/najie-storage-cos.js",
+    "commands": {
+      "config:set": {
+        "description": "设置 COS 配置",
+        "args": ["--secretId", "--secretKey", "--bucket", "--region"]
+      },
+      "config:show": {
+        "description": "显示当前配置"
+      },
+      "config:test": {
+        "description": "测试 COS 连接"
+      },
+      "ls": {
+        "description": "列出存储桶文件",
+        "args": ["--prefix", "--limit"]
+      },
+      "upload": {
+        "description": "上传文件",
+        "args": ["<file>", "--key"]
+      },
+      "download": {
+        "description": "下载文件",
+        "args": ["<key>", "--output"]
+      },
+      "rm": {
+        "description": "删除文件",
+        "args": ["<key>"]
+      },
+      "serve": {
+        "description": "启动 Web UI 服务",
+        "args": ["--port"]
+      }
+    }
+  },
+  
+  "api": {
+    "enabled": true,
+    "module": "./lib/index.js",
+    "exports": {
+      "loadConfig": {
+        "description": "加载 COS 配置",
+        "params": [],
+        "returns": "{ success: boolean, data?: object, error?: string }"
+      },
+      "saveConfig": {
+        "description": "保存 COS 配置",
+        "params": ["config"],
+        "returns": "{ success: boolean, error?: string }"
+      },
+      "testConnection": {
+        "description": "测试 COS 连接",
+        "params": ["config"],
+        "returns": "{ success: boolean, error?: string }"
+      },
+      "uploadFile": {
+        "description": "上传文件",
+        "params": ["filePath", "key", "onProgress"],
+        "returns": "{ success: boolean, data?: object, error?: string }"
+      },
+      "downloadFile": {
+        "description": "下载文件",
+        "params": ["key", "outputPath"],
+        "returns": "{ success: boolean, data?: object, error?: string }"
+      },
+      "listFiles": {
+        "description": "列出文件",
+        "params": ["prefix", "limit"],
+        "returns": "{ success: boolean, files?: Array, error?: string }"
+      },
+      "deleteFile": {
+        "description": "删除文件",
+        "params": ["key"],
+        "returns": "{ success: boolean, error?: string }"
+      },
+      "getFileUrl": {
+        "description": "获取文件访问 URL",
+        "params": ["key", "expires"],
+        "returns": "{ success: boolean, url?: string, error?: string }"
+      }
+    }
+  },
+  
+  "ui": {
+    "enabled": true,
+    "port": 5175,
+    "startCommand": "npm run subapp",
+    "stopCommand": "npm run subapp:stop",
+    "entry": "./ui/dist/index.html",
+    "buildCommand": "npm run build",
+    "requireBuild": true,
+    "routes": [
+      { "path": "/", "name": "文件管理" },
+      { "path": "/config", "name": "COS 配置" }
+    ]
+  },
+  
+  "dependencies": {
+    "runtime": ["cos-nodejs-sdk-v5", "commander", "express", "cors"]
+  }
+}

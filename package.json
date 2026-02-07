@@ -1,0 +1,28 @@
+{
+  "name": "storage-cos",
+  "version": "0.1.0",
+  "description": "云存储（COS）- 腾讯云对象存储服务，支持 CLI 和 Web UI 两种使用方式",
+  "type": "module",
+  "bin": {
+    "najie-storage-cos": "./bin/najie-storage-cos.js"
+  },
+  "main": "./lib/index.js",
+  "scripts": {
+    "subapp": "concurrently \"node ./bin/najie-storage-cos.js serve\" \"npm run dev --prefix ui\"",
+    "subapp:stop": "node ./bin/najie-storage-cos.js serve --stop",
+    "build": "npm run build --prefix ui",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "cos-nodejs-sdk-v5": "^2.14.5",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
