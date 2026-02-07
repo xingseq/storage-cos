@@ -8,6 +8,8 @@
   },
   "main": "./lib/index.js",
   "scripts": {
+    "setup": "node scripts/setup.js",
+    "postinstall": "npm run setup",
     "subapp": "concurrently \"node ./bin/najie-storage-cos.js serve\" \"npm run dev --prefix ui\"",
     "subapp:stop": "node ./bin/najie-storage-cos.js serve --stop",
     "build": "npm run build --prefix ui",
